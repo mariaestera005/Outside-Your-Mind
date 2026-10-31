@@ -1,2 +1,2 @@
 # Outside-Your-Mind
-Proiectul nostru consta intr-o aplicatie web (\*)destinata tinerilor, pe care acestia o pot accesa atunci când au parte de momente dificile. Problema pe care o abordam prin realizarea acestui proiect este lipsa unui spatiu sigur pentru persoanele care se confrunta cu probleme pe care nu stiu cum sa le abordeze ori care se simt singure.
+Our project consists of a web application designed for young people, which they can access whenever they are going through difficult times. The problem we aim to address through this project is the lack of a safe space for individuals who are facing challenges they do not know how to deal with or who feel lonely and isolated.
