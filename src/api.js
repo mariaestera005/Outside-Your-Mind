@@ -67,3 +67,28 @@ export async function sendReply(messageId, text) {
   if (!res.ok) throw new Error(`Eroare la trimiterea răspunsului (${res.status})`)
   return res.json()
 }
+
+// ---------- Jurnal ----------
+// TEMPORAR: trimitem numele userului în headerul X-User (login-ul nu are încă backend).
+// Când ai autentificare reală, aici pui tokenul (Authorization) în loc.
+async function journalRequest(user, path, options = {}) {
+  const res = await fetch(`${API_URL}/journal${path}`, {
+    ...options,
+    headers: { 'Content-Type': 'application/json', 'X-User': encodeURIComponent(user.name), ...options.headers },
+  })
+  if (!res.ok) throw new Error(`Eroare la jurnal (${res.status})`)
+  return res.status === 204 ? null : res.json()
+}
+
+// Caiete: o listă de { id, title, cover_color, default_style, entry_count }
+export const getNotebooks = (user) => journalRequest(user, '/notebooks')
+export const createNotebook = (user, body) => journalRequest(user, '/notebooks', { method: 'POST', body: JSON.stringify(body) })
+export const deleteNotebook = (user, id) => journalRequest(user, `/notebooks/${id}`, { method: 'DELETE' })
+
+// Pagini: { id, title, content, mood, style, entry_date }
+export const getEntries = (user, notebookId, search = '') =>
+  journalRequest(user, `/notebooks/${notebookId}/entries${search ? `?q=${encodeURIComponent(search)}` : ''}`)
+export const createEntry = (user, notebookId, body = {}) =>
+  journalRequest(user, `/notebooks/${notebookId}/entries`, { method: 'POST', body: JSON.stringify(body) })
+export const updateEntry = (user, id, body) => journalRequest(user, `/entries/${id}`, { method: 'PATCH', body: JSON.stringify(body) })
+export const deleteEntry = (user, id) => journalRequest(user, `/entries/${id}`, { method: 'DELETE' })

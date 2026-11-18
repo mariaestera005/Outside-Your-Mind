@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat&family=Courier+Prime&family=Lora&family=Merriweather&family=Patrick+Hand&display=swap');
+
+/* ===== Jurnal ===== */
+.jr-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+.jr-new { margin-bottom: 18px; max-width: 420px; }
+.jr-swatch { width: 34px; height: 34px; border-radius: 50%; border: 3px solid transparent; margin: 4px; }
+.jr-swatch.on { border-color: var(--ink); }
+
+.jr-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 16px; margin-top: 18px; }
+.jr-cover { height: 140px; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-start; gap: 4px; text-align: left; padding: 16px; border: none; border-radius: 20px; box-shadow: 0 8px 22px rgba(232, 85, 74, 0.18); transition: transform 0.2s; }
+.jr-cover:hover { transform: translateY(-3px) rotate(-1deg); }
+
+.jr-search { flex: 1; min-width: 180px; padding: 11px 18px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.7); background: rgba(255, 255, 255, 0.6); }
+.jr-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.jr-list li { display: flex; align-items: center; gap: 8px; }
+.jr-item { flex: 1; display: flex; align-items: center; gap: 14px; text-align: left; padding: 12px 18px; border-radius: 18px; border: 1px solid rgba(255, 255, 255, 0.7); background: rgba(255, 255, 255, 0.55); }
+.jr-item:hover { background: white; }
+.jr-emoji { font-size: 1.5rem; }
+.jr-snippet { display: block; }
+
+.jr-editor { display: flex; gap: 16px; align-items: flex-start; }
+
+/* Pagina: stilul alege utilizatorul și ajunge aici prin variabile CSS */
+.jr-page { flex: 1; min-width: 0; min-height: 65vh; padding: 24px 30px; border-radius: 18px; box-shadow: 0 6px 26px rgba(58, 31, 43, 0.15);
+  background-color: var(--page-bg); color: var(--page-text); font-family: var(--page-font); font-size: var(--page-size); }
+.jr-title { width: 100%; border: none; background: transparent; font: inherit; color: inherit; font-size: 1.5em; font-weight: bold; outline: none; }
+.jr-title::placeholder, .jr-text::placeholder { color: inherit; opacity: 0.45; }
+.jr-moods { display: flex; flex-wrap: wrap; gap: 4px; margin: 8px 0 14px; }
+.jr-mood { background: transparent; border: 2px solid transparent; border-radius: 12px; font-size: 1.3rem; padding: 2px 6px; opacity: 0.55; }
+.jr-mood.on { opacity: 1; border-color: currentColor; }
+.jr-text { width: 100%; min-height: 50vh; border: none; background: transparent; font: inherit; color: inherit; line-height: 1.8em; resize: vertical; outline: none; }
+
+/* Tipuri de hârtie (line-height de 1.8em = pasul liniilor, ca textul să stea pe linie) */
+.paper-lined { background-image: repeating-linear-gradient(transparent 0 calc(1.8em - 1px), color-mix(in srgb, var(--page-text) 18%, transparent) calc(1.8em - 1px) 1.8em); background-position: 0 6.2rem; }
+.paper-dotted { background-image: radial-gradient(color-mix(in srgb, var(--page-text) 30%, transparent) 1px, transparent 1px); background-size: 22px 22px; }
+.paper-grid { background-image: linear-gradient(color-mix(in srgb, var(--page-text) 14%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--page-text) 14%, transparent) 1px, transparent 1px); background-size: 24px 24px; }
+
+.jr-panel { width: 250px; display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 18px; background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(255, 255, 255, 0.7); }
+.jr-panel h3 { margin: 10px 0 2px; font-size: 0.95rem; }
+.jr-panel label { display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; gap: 8px; }
+.jr-panel select { padding: 8px 12px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.7); background: rgba(255, 255, 255, 0.7); }
+.jr-theme { border: 1px solid rgba(58, 31, 43, 0.2); border-radius: 999px; padding: 8px 14px; margin: 3px; font-size: 0.9rem; }
+.jr-on { background: var(--coral) !important; color: white; }
+
+@media (max-width: 760px) {
+  .jr-editor { flex-direction: column-reverse; }
+  .jr-panel { width: 100%; }
+  .jr-page { width: 100%; padding: 16px; }
+}

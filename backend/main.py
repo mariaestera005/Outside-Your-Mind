@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from database import get_all_books
+from journal import router as journal_router
 
 app = FastAPI()
 
@@ -14,6 +15,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+# Jurnalul (caiete + pagini personalizabile) trăiește în journal.py
+app.include_router(journal_router)
 
 
 @app.get("/books")

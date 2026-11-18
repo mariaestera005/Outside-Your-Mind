@@ -7,6 +7,7 @@ import PodcastsPage from './PodcastsPage.jsx'
 import ContactPage from './ContactPage.jsx'
 import LoginPage from './LoginPage.jsx'
 import VolunteerPage from './VolunteerPage.jsx'
+import JournalPage from './JournalPage.jsx'
 
 function App() {
   const [page, setPage] = useState('chat') 
@@ -27,6 +28,7 @@ function App() {
     books: <BooksPage />,
     podcasts: <PodcastsPage />,
     contact: <ContactPage />,
+    journal: <JournalPage user={user} setPage={setPage} />,
     login: <LoginPage onLogin={handleLogin} />,
   }
 

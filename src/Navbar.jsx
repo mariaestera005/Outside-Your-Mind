@@ -1,7 +1,7 @@
 // Bara de sus. Primește de la App: pagina curentă, funcția care schimbă pagina,
 // userul logat și funcția de logout.
 function Navbar({ page, setPage, user, onLogout }) {
-  const links = [['chat', 'Acasă'], ['books', 'Cărți'], ['podcasts', 'Podcasturi'], ['contact', 'Contact']]
+  const links = [['chat', 'Acasă'], ['books', 'Cărți'], ['podcasts', 'Podcasturi'], ['contact', 'Contact'], ['journal', 'Jurnal']]
   const isVolunteer = user?.role === 'volunteer' 
 
   return (
