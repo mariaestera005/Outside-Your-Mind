@@ -1,32 +1,69 @@
-import { useState, useEffect } from 'react'
-import { getInbox, sendReply } from './api.js'
+import { useState, useEffect, useRef } from 'react'
+import { getInbox, sendReply, markRead, deleteThread } from './api.js'
 
-function VolunteerPage() {
-  const [messages, setMessages] = useState([])
-  const [selectedId, setSelectedId] = useState(null) // mesajul deschis
+// Data din server (UTC) afișată pe ora din România
+function formatDate(iso) {
+  return new Date(iso).toLocaleString('ro-RO', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+}
+
+function VolunteerPage({ user }) {
+  const token = user.token
+  const [messages, setMessages] = useState([]) // conversațiile din inbox
+  const [selectedId, setSelectedId] = useState(null) // conversația deschisă
   const [reply, setReply] = useState('')
   const [error, setError] = useState('')
+  const selectedIdRef = useRef(null)
+  selectedIdRef.current = selectedId
+
+  // Aduce inbox-ul acum și apoi la fiecare 5 secunde, ca mesajele noi să apară singure
+  async function refresh() {
+    try {
+      const inbox = await getInbox(token)
+      const openId = selectedIdRef.current
+      // Conversația deschisă rămâne marcată ca citită chiar dacă sosesc mesaje noi
+      if (openId && inbox.some((m) => m.id === openId && !m.read)) markRead(openId, token).catch(() => {})
+      setMessages(inbox.map((m) => (m.id === openId ? { ...m, read: true } : m)))
+      setError('')
+    } catch (err) {
+      setError(err.message)
+    }
+  }
 
   useEffect(() => {
-    getInbox().then(setMessages) // aduce mesajele din api.js, o singură dată
+    refresh()
+    const timer = setInterval(refresh, 5000)
+    return () => clearInterval(timer)
   }, [])
 
   const selected = messages.find((m) => m.id === selectedId)
 
-  // Deschide un mesaj și îl marchează ca citit
+  // Deschide o conversație și o marchează ca citită
   function open(id) {
     setSelectedId(id)
     setMessages(messages.map((m) => (m.id === id ? { ...m, read: true } : m)))
+    markRead(id, token).catch(() => {})
+  }
+
+  // Șterge definitiv conversația deschisă (cu confirmare)
+  async function handleDelete() {
+    if (!window.confirm('Ștergi definitiv această conversație? Nu se poate anula.')) return
+    try {
+      await deleteThread(selectedId, token)
+      setMessages(messages.filter((m) => m.id !== selectedId))
+      setSelectedId(null)
+      setError('')
+    } catch (err) {
+      setError(err.message)
+    }
   }
 
   async function handleReply(e) {
     e.preventDefault()
     if (reply.trim() === '') return
     try {
-      await sendReply(selectedId, reply) // din api.js
-      setMessages(messages.map((m) => (m.id === selectedId ? { ...m, replies: [...m.replies, reply] } : m)))
+      await sendReply(selectedId, reply, token) // din api.js
       setReply('')
-      setError('')
+      await refresh()
     } catch (err) {
       setError(err.message)
     }
@@ -34,7 +71,7 @@ function VolunteerPage() {
 
   return (
     <div className="chat-layout">
-      {/* STÂNGA: lista de mesaje */}
+      {/* STÂNGA: lista de conversații */}
       <aside className="history glass">
         <h3 className="side-title">Inbox</h3>
         {messages.length === 0 && <p className="muted small">Nu ai mesaje.</p>}
@@ -46,17 +83,21 @@ function VolunteerPage() {
         ))}
       </aside>
 
-      {/* DREAPTA: mesajul deschis + răspunsul */}
+      {/* DREAPTA: conversația deschisă + răspunsul */}
       <section className="chatbox glass">
         {!selected ? (
-          <p className="empty">Alege un mesaj din stânga ca să îl citești.</p>
+          <p className="empty">Alege o conversație din stânga ca să o citești.</p>
         ) : (
           <>
-            <h1 className="page-title">{selected.subject}</h1>
-            <p className="muted">De la {selected.from} · {selected.date}</p>
+            <div className="thread-head">
+              <h1 className="page-title">{selected.subject}</h1>
+              <button type="button" className="danger-btn" onClick={handleDelete}>Șterge conversația</button>
+            </div>
+            <p className="muted">De la {selected.from} · {formatDate(selected.date)}</p>
             <div className="messages">
-              <div className="bubble bot">{selected.text}</div>
-              {selected.replies.map((r, i) => <div key={i} className="bubble user">{r}</div>)}
+              {selected.messages.map((m) => (
+                <div key={m.id} className={m.from === 'user' ? 'bubble bot' : 'bubble user'}>{m.text}</div>
+              ))}
             </div>
             {error && <p className="error">{error}</p>}
             <form className="form" onSubmit={handleReply}>

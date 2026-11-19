@@ -11,6 +11,8 @@ from urllib.parse import unquote
 from fastapi import APIRouter, Depends, Header, HTTPException, Query
 from pydantic import BaseModel, Field, field_validator
 
+from auth import bearer_token, user_from_token
+
 FOLDER = os.path.dirname(os.path.abspath(__file__))
 DB_FILE = os.path.join(FOLDER, "journal.db")  # fișier separat de books.db; e în .gitignore (date private)
 
@@ -67,14 +69,12 @@ def now():
 
 
 # ---------- Cine e userul ----------
-def current_user(x_user: str | None = Header(default=None)) -> str:
-    """TEMPORAR: login-ul din proiect nu are încă backend, așa că frontend-ul trimite numele userului
-    în headerul X-User. Oricine poate trimite orice nume => NU e sigur. Când faci autentificarea
-    reală (token/sesiune), schimbi doar funcția asta ca să întoarcă userul din token."""
-    user = unquote(x_user or "").strip()
-    if not user:
+def current_user(authorization: str | None = Header(default=None)) -> str:
+    """Userul din token (Authorization: Bearer ...), prin auth.py. Jurnalul fiecărui cont e legat de emailul lui."""
+    user = user_from_token(bearer_token(authorization))
+    if user is None:
         raise HTTPException(401, "Trebuie să fii logat")
-    return user
+    return user["email"]
 
 
 # ---------- Validare ----------

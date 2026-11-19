@@ -2,3 +2,5 @@
 books.db
 __pycache__/
 journal.db
+chat.db
+users.db

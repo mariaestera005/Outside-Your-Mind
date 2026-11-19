@@ -26,7 +26,10 @@ function Navbar({ page, setPage, user, onLogout }) {
           <button className="nav-btn" onClick={onLogout}>Logout</button>
         </div>
       ) : (
-        <button className="cta-btn small" onClick={() => setPage('login')}>Login</button>
+        <div>
+          <button className="nav-btn" onClick={() => setPage('volunteer-login')}>Voluntari</button>
+          <button className="cta-btn small" onClick={() => setPage('login')}>Login</button>
+        </div>
       )}
     </header>
   )

@@ -8,7 +8,7 @@ function Background() {
         <ShaderGradient
           type="plane"       // forma: plane | sphere | waterPlane
           animate="on"       // animația pornită
-          uSpeed={0.25}      // viteza (mic = liniștitor)
+          uSpeed={0.45}      // viteza (mic = liniștitor, mare = valuri mai vizibile)
           uStrength={2.4}    // cât de mult se unduiește
           uDensity={1.4}
           uFrequency={5.5}
@@ -18,7 +18,7 @@ function Background() {
           color3="#8FD6EE"   // albastru
           rotationX={50}
           rotationZ={-60}
-          cDistance={3.6}
+          cDistance={3.2}    // mai aproape = planul umple mai bine ecranul
           lightType="3d"
           brightness={1.15}
           grain="off"
