@@ -4,3 +4,4 @@ __pycache__/
 journal.db
 chat.db
 users.db
+podcasts.db

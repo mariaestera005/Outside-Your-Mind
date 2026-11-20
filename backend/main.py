@@ -13,7 +13,7 @@ from chat_db import (
     add_message, delete_thread, get_inbox, get_thread_messages, get_thread_owner,
     get_user_threads, mark_read, purge_anonymous,
 )
-from database import get_all_books
+from database import get_all_books, get_all_podcasts
 from journal import router as journal_router
 from summarizer import fill_missing_titles, update_title
 
@@ -129,6 +129,13 @@ def me(user=Depends(require_user)):
 def read_books():
     """Adresa http://localhost:8000/books returnează lista de cărți."""
     return get_all_books()
+
+
+# ---------- Podcasturi ----------
+@app.get("/podcasts")
+def read_podcasts():
+    """Adresa http://localhost:8000/podcasts returnează lista de podcasturi."""
+    return get_all_podcasts()
 
 
 # ---------- Chat (utilizator) ----------

@@ -1,6 +1,6 @@
 export const API_URL = 'http://localhost:8000'
 
-// true = apar datele de test pentru podcasturi; pune false când backend-ul are /podcasts
+// true = apar butoanele de previzualizare din pagina de login; pune false în versiunea finală
 export const DEV_PREVIEW = true
 
 // Header-ul cu tokenul contului logat; fără token (utilizator neautentificat) nu se trimite nimic
@@ -38,12 +38,8 @@ export async function getBooks() {
   return res.json()
 }
 
-// Podcasturi: o listă de { id, title, author, category, description, link }
+// Podcasturi: o listă de { id, title, author, category, description, link, youtube_link, voxa_link }
 export async function getPodcasts() {
-  if (DEV_PREVIEW) {
-    return [{ id: 1, title: 'Podcast demo', author: 'Gazdă demo', category: 'Demo',
-      description: 'Podcast de previzualizare. Dispare când pui DEV_PREVIEW = false.', link: '' }]
-  }
   const res = await fetch(`${API_URL}/podcasts`)
   if (!res.ok) throw new Error(`Eroare la încărcarea podcasturilor (${res.status})`)
   return res.json()
