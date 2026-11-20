@@ -24,3 +24,27 @@ def get_all_books():
     rows = connection.execute("SELECT * FROM books ORDER BY id").fetchall()
     connection.close()
     return [dict(row) for row in rows]
+
+
+# ---------- Podcasturi ----------
+# Bază de date separată (podcasts.db), creată automat din podcasts.sql, ca la cărți
+PODCASTS_DB_FILE = os.path.join(FOLDER, "podcasts.db")
+PODCASTS_SQL_FILE = os.path.join(FOLDER, "podcasts.sql")
+
+
+def create_podcasts_database():
+    if os.path.exists(PODCASTS_DB_FILE):
+        return
+    connection = sqlite3.connect(PODCASTS_DB_FILE)
+    with open(PODCASTS_SQL_FILE, encoding="utf-8") as file:
+        connection.executescript(file.read())
+    connection.close()
+
+
+def get_all_podcasts():
+    create_podcasts_database()
+    connection = sqlite3.connect(PODCASTS_DB_FILE)
+    connection.row_factory = sqlite3.Row
+    rows = connection.execute("SELECT * FROM podcasts ORDER BY id").fetchall()
+    connection.close()
+    return [dict(row) for row in rows]
